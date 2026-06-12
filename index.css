@@ -1,0 +1,16 @@
+.main-div {
+    display: grid;
+    background-color: blanchedalmond;
+}
+
+.main-text-area-container {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    padding: 10px;
+}
+
+.main-text-area {
+    width: 80%;
+    padding: 10px;
+}
