@@ -19,6 +19,17 @@ function updateDefaultNotes(e) {
   localStorage.setItem("WEB_DIARY_NOTES", JSON.stringify(defaultNotes));
   mainBoard.append(newDiv);
 }
+function addNewStickyNote() {
+  if (postText.value) {
+    const newStickyNote = {
+      notesID: defaultNotes.length,
+      notesMsg: postText.value,
+      notesTimeStamp: 1776085680,
+    };
+    defaultNotes.push(newStickyNote);
+    updateDefaultNotes(newStickyNote);
+  }
+}
 
 defaultNotes.map((e) => {
   const newDiv = document.createElement("div");
@@ -31,20 +42,24 @@ const newDiv = document.createElement("div");
 
 // defaultElement.textContent = defaultNotes[0].notesMsg;
 
+const form = document.getElementById("newNoteForm");
 const postButton = document.getElementById("post-button");
 const postText = document.getElementById("post-text");
 
 postButton.addEventListener("click", () => {
+  e.preventDefault();
   // alert(postText.value);
-  if (postText.value) {
-    const newStickyNote = {
-      notesID: defaultNotes.length,
-      notesMsg: postText.value,
-      notesTimeStamp: 1776085680,
-    };
-    defaultNotes.push(newStickyNote);
-    updateDefaultNotes(newStickyNote);
-    // alert("clicked dalam");
-  }
+
+  addNewStickyNote();
+  // alert("clicked dalam");
+
   // alert("clicked");
+});
+
+postText.addEventListener("keydown", function (e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    addNewStickyNote();
+    form.requestSubmit();
+  }
 });
