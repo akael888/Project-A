@@ -16,9 +16,17 @@ function updateDefaultNotes(e) {
   const newDiv = document.createElement("div");
   newDiv.className = "sticky-notes";
   newDiv.textContent = e.notesMsg;
+
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "Delete";
+  deleteButton.className = "deleteNote";
+  deleteButton.style.display = "none";
+
+  newDiv.appendChild(deleteButton);
   localStorage.setItem("WEB_DIARY_NOTES", JSON.stringify(defaultNotes));
   mainBoard.append(newDiv);
 }
+
 function addNewStickyNote() {
   if (postText.value) {
     const newStickyNote = {
@@ -35,6 +43,14 @@ defaultNotes.map((e) => {
   const newDiv = document.createElement("div");
   newDiv.className = "sticky-notes";
   newDiv.textContent = e.notesMsg;
+
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "Delete";
+  deleteButton.className = "deleteNote";
+  deleteButton.style.display = "none";
+
+  newDiv.appendChild(deleteButton);
+
   mainBoard.append(newDiv);
 });
 
@@ -45,9 +61,9 @@ const newDiv = document.createElement("div");
 const form = document.getElementById("newNoteForm");
 const postButton = document.getElementById("post-button");
 const postText = document.getElementById("post-text");
+const stickyNotes = document.querySelectorAll(".sticky-notes");
 
 postButton.addEventListener("click", () => {
-  e.preventDefault();
   // alert(postText.value);
 
   addNewStickyNote();
@@ -62,4 +78,16 @@ postText.addEventListener("keydown", function (e) {
     addNewStickyNote();
     form.requestSubmit();
   }
+});
+
+stickyNotes.forEach((note) => {
+  note.addEventListener("mouseenter", (event) => {
+    const delButtonInside = note.querySelector(".deleteNote");
+    delButtonInside.style.display = "flex";
+  });
+
+  note.addEventListener("mouseout", (event) => {
+    const delButtonInside = note.querySelector(".deleteNote");
+    delButtonInside.style.display = "none";
+  });
 });
