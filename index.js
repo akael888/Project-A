@@ -52,9 +52,47 @@ function addNewStickyNote() {
 
 defaultNotes.map((e) => {
   const newDiv = document.createElement("div");
+  const newText = document.createElement("text");
+  const newInput = document.createElement("input");
+
+  newText.innerText = e.notesMsg;
+  newInput.defaultValue = e.notesMsg;
+  newInput.className = "sticky-input";
+  newInput.style.display = "none";
+
+  newDiv.appendChild(newInput);
+  newDiv.appendChild(newText);
+
   newDiv.className = "sticky-notes";
   newDiv.id = `${e.notesID}`;
-  newDiv.textContent = e.notesMsg;
+
+  newDiv.addEventListener("mouseenter", (e) => {
+    newInput.style.display = "flex";
+    newText.style.display = "none";
+  });
+
+  newDiv.addEventListener("mouseleave", (e) => {
+    newInput.style.display = "none";
+    newText.style.display = "flex";
+  });
+
+  newInput.addEventListener("input", (e) => {
+    let inputValue = e.target.value;
+    const changedNote = defaultNotes.find(
+      (note) => note.notesID === Number(newDiv.id),
+    );
+    // alert(changedNote);
+    if (changedNote) {
+      changedNote.notesMsg = newInput.value;
+      newText.innerText = changedNote.notesMsg;
+      // alert(defaultNotes[newDiv.id].notesMsg);
+      // localStorage.setItem("");
+      localStorage.setItem("WEB_DIARY_NOTES", JSON.stringify(defaultNotes));
+
+      // alert(changedNote.notesMsg);
+      // updateDefaultNotes(changedNote);
+    }
+  });
 
   const deleteButton = document.createElement("button");
   deleteButton.textContent = "Delete";
