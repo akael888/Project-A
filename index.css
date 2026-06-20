@@ -13,6 +13,18 @@
 #post-text {
     width: 80%;
     padding: 10px;
+    background-color: transparent;
+    border-color: blue;
+}
+
+#post-button {
+    background-color: transparent;
+    border-radius: 5px;
+}
+
+#post-button:hover {
+    background-color: green;
+    color: white;
 }
 
 .sticky-notes {
