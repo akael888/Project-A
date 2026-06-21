@@ -54,6 +54,7 @@ defaultNotes.map((e) => {
   const newDiv = document.createElement("div");
   const newText = document.createElement("text");
   const newInput = document.createElement("input");
+  const newNoteDiv = document.getElementById("new-note");
 
   newText.innerText = e.notesMsg;
   newInput.defaultValue = e.notesMsg;
@@ -111,7 +112,7 @@ defaultNotes.map((e) => {
 
   newDiv.append(deleteButton);
 
-  mainBoard.append(newDiv);
+  mainBoard.insertBefore(newDiv, newNoteDiv);
 });
 
 const newDiv = document.createElement("div");
