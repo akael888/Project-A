@@ -32,44 +32,6 @@ const mainBoard = document.getElementById("main-board");
 
 function updateDefaultNotes(e) {
   const newDiv = document.createElement("div");
-  newDiv.className = "sticky-notes";
-  newDiv.id = `${e.notesID}`;
-  newDiv.textContent = e.notesMsg;
-
-  const deleteButton = document.createElement("button");
-  deleteButton.textContent = "Delete";
-  deleteButton.className = "deleteNote";
-  deleteButton.style.display = "none";
-
-  deleteButton.addEventListener("click", (e) => {
-    parentDiv = deleteButton.closest("div");
-    parentId = parentDiv.id;
-    parentDiv.remove();
-
-    const updatedData = defaultNotes.filter((data) => data.notesID != parentId);
-    defaultNotes = updatedData;
-    localStorage.setItem("WEB_DIARY_NOTES", JSON.stringify(updatedData));
-  });
-
-  newDiv.append(deleteButton);
-  localStorage.setItem("WEB_DIARY_NOTES", JSON.stringify(defaultNotes));
-  mainBoard.append(newDiv);
-}
-
-function addNewStickyNote() {
-  if (postText.value) {
-    const newStickyNote = {
-      notesID: defaultNotes.length,
-      notesMsg: postText.value,
-      notesTimeStamp: 1776085680,
-    };
-    defaultNotes.push(newStickyNote);
-    updateDefaultNotes(newStickyNote);
-  }
-}
-
-defaultNotes.map((e) => {
-  const newDiv = document.createElement("div");
   const newText = document.createElement("text");
   const newInput = document.createElement("input");
   const newNoteDiv = document.getElementById("new-note");
@@ -105,6 +67,74 @@ defaultNotes.map((e) => {
   //Make Sticky Notes Draggable
   let offsetX = 0;
   let offsetY = 0;
+
+  newNoteDiv.addEventListener("pointerdown", (e) => {
+    if (e.target === newInput || e.target === deleteButton) return;
+    e.preventDefault();
+    // Calculate cursor position relative to the element's position from top left
+    offsetX = e.clientX - newNoteDiv.offsetLeft;
+    offsetY = e.clientY - newNoteDiv.offsetTop;
+
+    document.addEventListener("pointermove", pointerMove);
+    document.addEventListener("pointerup", pointerUp);
+
+    function pointerMove(e) {
+      let newX = e.clientX - offsetX;
+      let newY = e.clientY - offsetY;
+
+      newNoteDiv.style.left = `${newX}px`;
+      newNoteDiv.style.top = `${newY}px`;
+
+      const changedNote = defaultNotes.find(
+        (note) => note.notesID === Number(newNoteDiv.id),
+      );
+      if (changedNote) {
+        changedNote.left = newX;
+        changedNote.top = newY;
+
+        // alert(defaultNotes[newDiv.id].notesMsg);
+        // localStorage.setItem("");
+        localStorage.setItem("WEB_DIARY_NOTES", JSON.stringify(defaultNotes));
+
+        // alert(changedNote.notesMsg);
+        // updateDefaultNotes(changedNote);
+      }
+    }
+
+    function pointerUp() {
+      document.removeEventListener("pointermove", pointerMove);
+      document.removeEventListener("pointerup", pointerUp);
+    }
+  });
+
+  newDiv.addEventListener("mouseenter", (e) => {
+    newInput.style.display = "flex";
+    newText.style.display = "none";
+  });
+
+  newDiv.addEventListener("mouseleave", (e) => {
+    newInput.style.display = "none";
+    newText.style.display = "flex";
+  });
+
+  newInput.addEventListener("input", (e) => {
+    let inputValue = e.target.value;
+    const changedNote = defaultNotes.find(
+      (note) => note.notesID === Number(newDiv.id),
+    );
+    // alert(changedNote);
+    if (changedNote) {
+      changedNote.notesMsg = newInput.value;
+      newText.innerText = changedNote.notesMsg;
+      // alert(defaultNotes[newDiv.id].notesMsg);
+      // localStorage.setItem("");
+      localStorage.setItem("WEB_DIARY_NOTES", JSON.stringify(defaultNotes));
+
+      // alert(changedNote.notesMsg);
+      // updateDefaultNotes(changedNote);
+    }
+  });
+
   newDiv.addEventListener("pointerdown", (e) => {
     if (e.target === newInput || e.target === deleteButton) return;
     e.preventDefault();
@@ -175,6 +205,24 @@ defaultNotes.map((e) => {
   newDiv.append(deleteButton);
 
   mainBoard.insertBefore(newDiv, newNoteDiv);
+}
+
+function addNewStickyNote() {
+  if (postText.value) {
+    const newStickyNote = {
+      notesID: defaultNotes.length,
+      notesMsg: postText.value,
+      notesTimeStamp: 1776085680,
+      left: "0px",
+      top: "0px",
+    };
+    defaultNotes.push(newStickyNote);
+    updateDefaultNotes(newStickyNote);
+  }
+}
+
+defaultNotes.map((e) => {
+  updateDefaultNotes(e);
 });
 
 const newDiv = document.createElement("div");
