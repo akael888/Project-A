@@ -2,6 +2,10 @@ const localStorageNotesData = JSON.parse(
   localStorage.getItem("WEB_DIARY_NOTES"),
 );
 
+const localStorageNewNoteLocation = JSON.parse(
+  localStorage.getItem("NEW_NOTES_LOCATION"),
+);
+
 let defaultNotes = localStorageNotesData
   ? localStorageNotesData
   : [
@@ -49,6 +53,15 @@ function updateDefaultNotes(e) {
   newDiv.style.left = `${e.left}px`;
   newDiv.style.top = `${e.top}px`;
 
+  console.log(localStorageNewNoteLocation);
+
+  newNoteDiv.style.left = localStorageNewNoteLocation
+    ? `${localStorageNewNoteLocation.left}px`
+    : 0;
+  newNoteDiv.style.top = localStorageNewNoteLocation
+    ? `${localStorageNewNoteLocation.top}px`
+    : 0;
+
   const deleteButton = document.createElement("button");
   deleteButton.textContent = "Delete";
   deleteButton.className = "deleteNote";
@@ -86,19 +99,18 @@ function updateDefaultNotes(e) {
       newNoteDiv.style.top = `${newY}px`;
 
       const changedNote = defaultNotes.find(
-        (note) => note.notesID === Number(newNoteDiv.id),
+        (note) => note.notesID === "new-note",
       );
-      if (changedNote) {
-        changedNote.left = newX;
-        changedNote.top = newY;
 
-        // alert(defaultNotes[newDiv.id].notesMsg);
-        // localStorage.setItem("");
-        localStorage.setItem("WEB_DIARY_NOTES", JSON.stringify(defaultNotes));
+      const newNoteLocation = {
+        left: newX,
+        top: newY,
+      };
 
-        // alert(changedNote.notesMsg);
-        // updateDefaultNotes(changedNote);
-      }
+      localStorage.setItem(
+        "NEW_NOTES_LOCATION",
+        JSON.stringify(newNoteLocation),
+      );
     }
 
     function pointerUp() {
@@ -251,13 +263,15 @@ postText.addEventListener("keydown", function (e) {
 });
 
 stickyNotes.forEach((note) => {
-  note.addEventListener("mouseenter", (event) => {
-    const delButtonInside = note.querySelector(".deleteNote");
-    delButtonInside.style.display = "flex";
-  });
+  const delButtonInside = note.querySelector(".deleteNote");
 
-  note.addEventListener("mouseleave", (event) => {
-    const delButtonInside = note.querySelector(".deleteNote");
-    delButtonInside.style.display = "none";
-  });
+  if (delButtonInside) {
+    note.addEventListener("mouseenter", (event) => {
+      delButtonInside.style.display = "flex";
+    });
+
+    note.addEventListener("mouseleave", (event) => {
+      delButtonInside.style.display = "none";
+    });
+  }
 });
