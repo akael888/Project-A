@@ -6,6 +6,8 @@ const localStorageNewNoteLocation = JSON.parse(
   localStorage.getItem("NEW_NOTES_LOCATION"),
 );
 
+const newNoteDiv = document.getElementById("new-note");
+
 let defaultNotes = localStorageNotesData
   ? localStorageNotesData
   : [
@@ -38,7 +40,6 @@ function updateDefaultNotes(e) {
   const newDiv = document.createElement("div");
   const newText = document.createElement("text");
   const newInput = document.createElement("input");
-  const newNoteDiv = document.getElementById("new-note");
 
   newText.innerText = e.notesMsg;
   newInput.defaultValue = e.notesMsg;
@@ -87,7 +88,7 @@ function updateDefaultNotes(e) {
     //Focus on Text Area for Post on Mouse Hover
     textArea.focus();
   });
-  
+
   console.log(textArea);
 
   newNoteDiv.addEventListener("pointerdown", (e) => {
@@ -228,24 +229,6 @@ function updateDefaultNotes(e) {
   mainBoard.insertBefore(newDiv, newNoteDiv);
 }
 
-function addNewStickyNote() {
-  if (postText.value) {
-    const newStickyNote = {
-      notesID: defaultNotes.length,
-      notesMsg: postText.value,
-      notesTimeStamp: 1776085680,
-      left: "0px",
-      top: "0px",
-    };
-    defaultNotes.push(newStickyNote);
-    updateDefaultNotes(newStickyNote);
-  }
-}
-
-defaultNotes.map((e) => {
-  updateDefaultNotes(e);
-});
-
 const newDiv = document.createElement("div");
 // defaultElement.textContent = defaultNotes[0].notesMsg;
 
@@ -266,7 +249,7 @@ postButton.addEventListener("click", () => {
 postText.addEventListener("keydown", function (e) {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
-    addNewStickyNote();
+    addNewStickyNote(e);
     form.requestSubmit();
   }
 });
@@ -283,4 +266,27 @@ stickyNotes.forEach((note) => {
       delButtonInside.style.display = "none";
     });
   }
+});
+
+function addNewStickyNote(e) {
+  const newNoteDiv = document.getElementById("new-note");
+  e.preventDefault();
+  // alert(postText.value);
+
+  const newStickyNote = {
+    notesID: defaultNotes.length,
+    notesMsg: postText.value,
+    notesTimeStamp: 1776085680,
+    left: newNoteDiv.style.left.split("px")[0],
+    top: newNoteDiv.style.top.split("px")[0] - 100,
+  };
+  // alert(newStickyNote);
+  // alert("masuk");
+  defaultNotes.push(newStickyNote);
+  updateDefaultNotes(newStickyNote);
+  localStorage.setItem("WEB_DIARY_NOTES", JSON.stringify(defaultNotes));
+}
+
+defaultNotes.map((e) => {
+  updateDefaultNotes(e);
 });
