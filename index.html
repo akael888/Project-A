@@ -8,8 +8,8 @@
     <title>Your Private Sticky Notess</title>
     <script src="index.js" defer></script>
   </head>
-  <body>
-    <h1 style="font-style: italic">Sticky Dump</h1>
+  <body style="max-width: 100vw">
+    <h1 id="app-title">Sticky Dump</h1>
     <div class="main-div">
       <!-- <form id="newNoteForm">
         <div class="main-text-area-container">
@@ -18,16 +18,7 @@
         <button id="post-button">Post</button>
       </form> -->
     </div>
-    <div id="main-board">
-      <div class="sticky-notes" id="new-note">
-        <form id="newNoteForm">
-          <div class="main-text-area-container">
-            <textarea id="post-text"></textarea>
-          </div>
-          <button id="post-button">+</button>
-        </form>
-      </div>
-    </div>
+    <div id="main-board"></div>
   </body>
   <footer><div>© 2026 - Elgratio Latuihamallo - v0.0.1</div></footer>
 </html>
