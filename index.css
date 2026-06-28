@@ -38,7 +38,8 @@
     cursor: move;
     user-select: none;
     touch-action: none;
-    box-shadow: 5px 5px 1px 1px rgb(80, 67, 27)
+    box-shadow: 5px 5px 1px 1px rgb(80, 67, 27);
+    z-index: 100;
 }
 
 .sticky-input {
@@ -53,6 +54,20 @@
     grid-auto-flow: column;
     gap: 5px;
     padding: 10px;
+    background-color: antiquewhite;
+    max-width: 100vw;
+    height: 100vh;
+}
+
+#app-title {
+    font-style: italic;
+    text-align: center;
+    width: 100%;
+    z-index: 1;
+    position: absolute;
+    color: rgb(71, 48, 48);
+    border: 10px black;
+    opacity: 90%;
 }
 
 /* #new-note {left: 200px;} */
