@@ -54,6 +54,12 @@ let defaultNotes = localStorageNotesData
       },
     ];
 
+const appTitle = document.getElementById("app-title");
+appTitle.innerText =
+  defaultNotes.length > 0
+    ? appTitle.innerText + " " + "with " + defaultNotes.length + " notes.."
+    : appTitle.innerText;
+
 function updateDefaultNotes(e) {
   const newDiv = document.createElement("div");
   const newText = document.createElement("text");
@@ -63,10 +69,11 @@ function updateDefaultNotes(e) {
   newText.className = "sticky-text";
   newText.style.maxWidth = "100%";
   newText.style.textAlign = "left";
-  newText.style.display="flex"
+  newText.style.display = "flex";
   newTextArea.defaultValue = e.notesMsg;
   newTextArea.className = "sticky-input";
   newTextArea.style.display = "none";
+  newTextArea.style.height = "100px";
 
   newDiv.appendChild(newTextArea);
   newDiv.appendChild(newText);
@@ -97,6 +104,12 @@ function updateDefaultNotes(e) {
 
     const updatedData = defaultNotes.filter((data) => data.notesID != parentId);
     defaultNotes = updatedData;
+    let tempText = "Sticky Dump";
+    appTitle.innerText = null;
+    appTitle.innerText =
+      defaultNotes.length > 0
+        ? tempText + " " + "with " + defaultNotes.length + " notes.."
+        : tempText;
     localStorage.setItem("WEB_DIARY_NOTES", JSON.stringify(updatedData));
   });
 
