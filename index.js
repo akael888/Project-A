@@ -42,21 +42,22 @@ let defaultNotes = localStorageNotesData
       {
         notesID: 0,
         notesMsg: "ABC",
-        notesTimeStamp: 1776085680,
+        notesTimeStamp: Date.now(),
         left: 0,
         top: 0,
       },
       {
         notesID: 1,
         notesMsg: "yes",
-        notesTimeStamp: 1776085680,
+        notesTimeStamp: Date.now(),
+
         left: 0,
         top: 0,
       },
       {
         notesID: 2,
         notesMsg: "Test 1234",
-        notesTimeStamp: 1776085680,
+        notesTimeStamp: Date.now(),
         left: 0,
         top: 0,
       },
@@ -72,6 +73,7 @@ function updateDefaultNotes(e) {
   const newDiv = document.createElement("div");
   const newText = document.createElement("text");
   const newTextArea = document.createElement("textarea");
+  const newDateText = document.createElement("text");
 
   newText.innerText = e.notesMsg;
   newText.className = "sticky-text";
@@ -83,6 +85,16 @@ function updateDefaultNotes(e) {
   newTextArea.style.display = "none";
   newTextArea.style.height = "100px";
 
+  const convertedTimeStamp = new Date(e.notesTimeStamp);
+
+  const fullDateConverted = `${convertedTimeStamp.getDate()} ${convertedTimeStamp.getMonth() + 1} ${convertedTimeStamp.getFullYear()} - ${convertedTimeStamp.getHours()}:${convertedTimeStamp.getMinutes()}:${convertedTimeStamp.getSeconds()}`;
+
+  newDateText.innerText = fullDateConverted;
+  newDateText.style.width = "100%";
+  newDateText.style.position = "absolute";
+  newDateText.style.top = "130px";
+
+  newDiv.appendChild(newDateText);
   newDiv.appendChild(newTextArea);
   newDiv.appendChild(newText);
 
@@ -322,14 +334,17 @@ postText.addEventListener("keydown", function (e) {
 function addNewStickyNote(e) {
   // e.preventDefault();
 
-  // const newNoteDiv = document.getElementById("new-note");
+  const newNoteDiv = document.getElementById("new-note");
 
   // alert(postText.value);
+
+  //get Current Date and Time
+  const currentDateandTime = new Date();
 
   const newStickyNote = {
     notesID: defaultNotes.length,
     notesMsg: postText.value,
-    notesTimeStamp: 1776085680,
+    notesTimeStamp: Date.now(),
     left: newNoteDiv.style.left.split("px")[0],
     top: newNoteDiv.style.top.split("px")[0] - 100,
   };
@@ -338,8 +353,8 @@ function addNewStickyNote(e) {
   defaultNotes.push(newStickyNote);
   updateDefaultNotes(newStickyNote);
   localStorage.setItem("WEB_DIARY_NOTES", JSON.stringify(defaultNotes));
-  newNoteDiv.style.left = `${newNoteDiv.style.left}px`;
-  newNoteDiv.style.top = `${newNoteDiv.style.top}px`;
+  newNoteDiv.style.left = `${localStorageNewNoteLocation.left}px`;
+  newNoteDiv.style.top = `${localStorageNewNoteLocation.top}px`;
 }
 
 defaultNotes.map((e) => {
