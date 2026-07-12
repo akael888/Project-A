@@ -73,7 +73,7 @@ function updateDefaultNotes(e) {
   const newDiv = document.createElement("div");
   const newText = document.createElement("text");
   const newTextArea = document.createElement("textarea");
-  const newDateText = document.createElement("text");
+  const newDateText = document.createElement("span");
 
   newText.innerText = e.notesMsg;
   newText.className = "sticky-text";
@@ -87,7 +87,9 @@ function updateDefaultNotes(e) {
 
   const convertedTimeStamp = new Date(e.notesTimeStamp);
 
-  const fullDateConverted = `${convertedTimeStamp.getDate()} ${convertedTimeStamp.getMonth() + 1} ${convertedTimeStamp.getFullYear()} - ${convertedTimeStamp.getHours()}:${convertedTimeStamp.getMinutes()}:${convertedTimeStamp.getSeconds()}`;
+  const pad = (n) => String(n).padStart(2, 0);
+
+  const fullDateConverted = `${convertedTimeStamp.getDate()}-${convertedTimeStamp.getMonth() + 1}-${convertedTimeStamp.getFullYear()} | ${pad(convertedTimeStamp.getHours())}:${pad(convertedTimeStamp.getMinutes())}:${pad(convertedTimeStamp.getSeconds())}`;
 
   newDateText.innerText = fullDateConverted;
   newDateText.style.width = "100%";
