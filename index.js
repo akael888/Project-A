@@ -69,6 +69,19 @@ appTitle.innerText =
     ? appTitle.innerText + " " + "with " + defaultNotes.length + " notes.."
     : appTitle.innerText;
 
+function getDuration(startDateTime) {
+  const diffinMs = Math.abs(new Date(startDateTime) - new Date());
+
+  const days = Math.floor(diffinMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(
+    (diffinMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+  );
+  const minutes = Math.floor((diffinMs % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diffinMs % (1000 * 60)) / 1000);
+
+  return { days, hours, minutes, seconds };
+}
+
 function updateDefaultNotes(e) {
   const newDiv = document.createElement("div");
   const newText = document.createElement("text");
@@ -87,9 +100,11 @@ function updateDefaultNotes(e) {
 
   const convertedTimeStamp = new Date(e.notesTimeStamp);
 
+  const durationToNow = getDuration(e.notesTimeStamp);
+
   const pad = (n) => String(n).padStart(2, 0);
 
-  const fullDateConverted = `${convertedTimeStamp.getDate()}-${convertedTimeStamp.getMonth() + 1}-${convertedTimeStamp.getFullYear()} | ${pad(convertedTimeStamp.getHours())}:${pad(convertedTimeStamp.getMinutes())}:${pad(convertedTimeStamp.getSeconds())}`;
+  const fullDateConverted = `${convertedTimeStamp.getDate()}-${convertedTimeStamp.getMonth() + 1}-${convertedTimeStamp.getFullYear()} | ${pad(convertedTimeStamp.getHours())}:${pad(convertedTimeStamp.getMinutes())}:${pad(convertedTimeStamp.getSeconds())} | ${durationToNow.days} days ${durationToNow.hours} hours ${durationToNow.minutes} minutes ${durationToNow.seconds} seconds ago`;
 
   newDateText.innerText = fullDateConverted;
   newDateText.style.width = "100%";
