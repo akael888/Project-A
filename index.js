@@ -88,8 +88,8 @@ newSearchInput.addEventListener("input", (e) => {
   if (newSearchInput.value == "") {
     sourcenotes = defaultNotes;
   } else {
-    const filterNotes = defaultNotes.filter(
-      (note) => note.notesMsg == newSearchInput.value,
+    const filterNotes = defaultNotes.filter((note) =>
+      new RegExp(newSearchInput.value, "i").test(note.notesMsg),
     );
     sourcenotes = filterNotes;
   }
