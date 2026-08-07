@@ -23,6 +23,7 @@ newNoteButton.id = "post-button";
 newNoteButton.textContent = "+";
 
 const form = document.getElementById("newNoteForm");
+const newSearchInput = document.createElement("input");
 
 newNoteButton.addEventListener("click", (e) => {
   e.preventDefault();
@@ -35,6 +36,18 @@ newNoteForm.appendChild(newNoteInputContainer);
 newNoteForm.appendChild(newNoteButton);
 newNoteDiv.appendChild(newNoteForm);
 mainBoard.appendChild(newNoteDiv);
+
+newSearchInput.style.className = "search-bar";
+newSearchInput.style.backgroundColor = "pink";
+newSearchInput.style.width = "100px";
+newSearchInput.style.height = "100px";
+
+mainBoard.appendChild(newSearchInput);
+
+newSearchInput.addEventListener("input", (e) => {
+  e.preventDefault();
+  alert("Test ");
+});
 
 let defaultNotes = localStorageNotesData
   ? localStorageNotesData
@@ -62,6 +75,11 @@ let defaultNotes = localStorageNotesData
         top: 0,
       },
     ];
+
+const filterNotes = defaultNotes.filter(
+  (note) => note.notesMsg == newSearchInput.value,
+);
+let sourcenotes = newSearchInput.value == "" ? defaultNotes : filterNotes;
 
 const appTitle = document.getElementById("app-title");
 appTitle.innerText =

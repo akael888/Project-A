@@ -79,4 +79,11 @@
     opacity: 90%;
 }
 
+.search-bar {
+    background-color: rgb(0, 0, 0);
+    border: 1px;
+    width: 100px;
+    height: 100px;
+}
+
 /* #new-note {left: 200px;} */
