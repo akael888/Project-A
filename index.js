@@ -115,8 +115,9 @@ function getDuration(startDateTime) {
   return { days, hours, minutes, seconds };
 }
 
-function updateDefaultNotes(e) {
-  const newDiv = document.createElement("div");
+function defineStarterElements(e) {
+  // Starter Elements in a Sticky Notes
+
   const newText = document.createElement("text");
   const newTextArea = document.createElement("textarea");
   const newDateText = document.createElement("span");
@@ -131,11 +132,11 @@ function updateDefaultNotes(e) {
   newTextArea.style.display = "none";
   newTextArea.style.height = "100px";
 
-  const convertedTimeStamp = new Date(e.notesTimeStamp);
-
-  const durationToNow = getDuration(e.notesTimeStamp);
-
+  //Time Padding
   const pad = (n) => String(n).padStart(2, 0);
+
+  const convertedTimeStamp = new Date(e.notesTimeStamp);
+  const durationToNow = getDuration(e.notesTimeStamp);
 
   const fullDateConverted = `${convertedTimeStamp.getDate()}-${convertedTimeStamp.getMonth() + 1}-${convertedTimeStamp.getFullYear()} | ${pad(convertedTimeStamp.getHours())}:${pad(convertedTimeStamp.getMinutes())}:${pad(convertedTimeStamp.getSeconds())} | ${durationToNow.days} days ${durationToNow.hours} hours ${durationToNow.minutes} minutes ${durationToNow.seconds} seconds ago`;
 
@@ -144,9 +145,17 @@ function updateDefaultNotes(e) {
   newDateText.style.position = "absolute";
   newDateText.style.top = "130px";
 
-  newDiv.appendChild(newDateText);
-  newDiv.appendChild(newTextArea);
-  newDiv.appendChild(newText);
+  return { newText, newTextArea, newDateText };
+}
+
+function defineNewDiv(e, elements) {
+  // a Div to Contain All Sticky Notes Element
+
+  const newDiv = document.createElement("div");
+
+  newDiv.appendChild(elements.newDateText);
+  newDiv.appendChild(elements.newTextArea);
+  newDiv.appendChild(elements.newText);
 
   newDiv.className = "sticky-notes";
   newDiv.id = `${e.notesID}`;
@@ -161,6 +170,13 @@ function updateDefaultNotes(e) {
   newNoteDiv.style.top = localStorageNewNoteLocation
     ? `${localStorageNewNoteLocation.top}px`
     : 0;
+
+  return { newDiv };
+}
+
+function updateDefaultNotes(e) {
+  const { newText, newTextArea, newDateText } = defineStarterElements(e);
+  const { newDiv } = defineNewDiv(e, { newText, newTextArea, newDateText });
 
   const deleteButton = document.createElement("button");
   deleteButton.textContent = "Delete";
