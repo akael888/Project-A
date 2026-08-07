@@ -10,7 +10,7 @@ const mainBoard = document.getElementById("main-board");
 
 // Created New Note Div foR Injection
 const newNoteDiv = document.createElement("div");
-newNoteDiv.className = "sticky-notes";
+newNoteDiv.className = "sticky-notes-add";
 newNoteDiv.id = "new-note";
 const newNoteForm = document.createElement("form");
 newNoteForm.id = "newNoteForm";
@@ -24,30 +24,6 @@ newNoteButton.textContent = "+";
 
 const form = document.getElementById("newNoteForm");
 const newSearchInput = document.createElement("input");
-
-newNoteButton.addEventListener("click", (e) => {
-  e.preventDefault();
-  addNewStickyNote(e);
-  form.requestSubmit();
-});
-
-newNoteInputContainer.appendChild(newNoteTextArea);
-newNoteForm.appendChild(newNoteInputContainer);
-newNoteForm.appendChild(newNoteButton);
-newNoteDiv.appendChild(newNoteForm);
-mainBoard.appendChild(newNoteDiv);
-
-newSearchInput.style.className = "search-bar";
-newSearchInput.style.backgroundColor = "pink";
-newSearchInput.style.width = "100px";
-newSearchInput.style.height = "100px";
-
-mainBoard.appendChild(newSearchInput);
-
-newSearchInput.addEventListener("input", (e) => {
-  e.preventDefault();
-  alert("Test ");
-});
 
 let defaultNotes = localStorageNotesData
   ? localStorageNotesData
@@ -86,6 +62,45 @@ appTitle.innerText =
   defaultNotes.length > 0
     ? appTitle.innerText + " " + "with " + defaultNotes.length + " notes.."
     : appTitle.innerText;
+newNoteButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  addNewStickyNote(e);
+  form.requestSubmit();
+});
+
+newNoteInputContainer.appendChild(newNoteTextArea);
+newNoteForm.appendChild(newNoteInputContainer);
+newNoteForm.appendChild(newNoteButton);
+newNoteDiv.appendChild(newNoteForm);
+mainBoard.appendChild(newNoteDiv);
+
+newSearchInput.style.className = "search-bar";
+newSearchInput.style.backgroundColor = "pink";
+newSearchInput.style.width = "100px";
+newSearchInput.style.height = "100px";
+
+mainBoard.appendChild(newSearchInput);
+
+newSearchInput.addEventListener("input", (e) => {
+  e.preventDefault();
+
+  // alert(newSearchInput.value);
+  if (newSearchInput.value == "") {
+    sourcenotes = defaultNotes;
+  } else {
+    const filterNotes = defaultNotes.filter(
+      (note) => note.notesMsg == newSearchInput.value,
+    );
+    sourcenotes = filterNotes;
+  }
+
+  console.log(sourcenotes);
+  // alert(sourcenotes);
+  cleanCurrentNotes();
+  sourcenotes.map((el) => {
+    updateDefaultNotes(el);
+  });
+});
 
 function getDuration(startDateTime) {
   const diffinMs = Math.abs(new Date(startDateTime) - new Date());
@@ -392,6 +407,12 @@ function addNewStickyNote(e) {
   newNoteDiv.style.top = `${localStorageNewNoteLocation.top}px`;
 }
 
-defaultNotes.map((e) => {
+function cleanCurrentNotes(e) {
+  const allNotes = document
+    .querySelectorAll(".sticky-notes")
+    .forEach((el) => el.remove());
+}
+
+sourcenotes.map((e) => {
   updateDefaultNotes(e);
 });
