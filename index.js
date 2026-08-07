@@ -359,10 +359,6 @@ function defineAddNoteDiv(e) {
     }
   });
 
-  postButton.addEventListener("click", () => {
-    addNewStickyNote(e);
-  });
-
   postText.addEventListener("keydown", function (e) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
