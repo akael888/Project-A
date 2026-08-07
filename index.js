@@ -8,7 +8,7 @@ const localStorageNewNoteLocation = JSON.parse(
 
 const mainBoard = document.getElementById("main-board");
 
-// Created New Note Div foR Injection
+// Created Input Note for Adding New Notes
 const newNoteDiv = document.createElement("div");
 newNoteDiv.className = "sticky-notes-add";
 newNoteDiv.id = "new-note";
@@ -25,6 +25,7 @@ newNoteButton.textContent = "+";
 const form = document.getElementById("newNoteForm");
 const newSearchInput = document.createElement("input");
 
+// Check if there's local storage Data or not before appending to Default Notes
 let defaultNotes = localStorageNotesData
   ? localStorageNotesData
   : [
@@ -52,6 +53,7 @@ let defaultNotes = localStorageNotesData
       },
     ];
 
+// Filter Notes for Search Note Feature
 const filterNotes = defaultNotes.filter(
   (note) => note.notesMsg == newSearchInput.value,
 );
@@ -62,25 +64,31 @@ appTitle.innerText =
   defaultNotes.length > 0
     ? appTitle.innerText + " " + "with " + defaultNotes.length + " notes.."
     : appTitle.innerText;
+
+// Add Input Note Button
 newNoteButton.addEventListener("click", (e) => {
   e.preventDefault();
   addNewStickyNote(e);
   form.requestSubmit();
 });
 
+// Append Input Note Elements
 newNoteInputContainer.appendChild(newNoteTextArea);
 newNoteForm.appendChild(newNoteInputContainer);
 newNoteForm.appendChild(newNoteButton);
 newNoteDiv.appendChild(newNoteForm);
 mainBoard.appendChild(newNoteDiv);
 
+// Defining Search Input Element
 newSearchInput.style.className = "search-bar";
 newSearchInput.style.backgroundColor = "pink";
 newSearchInput.style.width = "100px";
 newSearchInput.style.height = "100px";
 
+// Appending to the Main Board
 mainBoard.appendChild(newSearchInput);
 
+// New Search Input Events
 newSearchInput.addEventListener("input", (e) => {
   e.preventDefault();
 
