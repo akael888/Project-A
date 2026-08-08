@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initApp() {
-
   // Defining Constants and Variables
   //-------------------------------------------
   // Get Local Storage Notes Data
@@ -20,25 +19,8 @@ function initApp() {
   // Get Main Board
   const mainBoard = document.getElementById("main-board");
 
-
- 
-
-  // Created Input Note for Adding New Notes
-  const newNoteDiv = document.createElement("div");
-  newNoteDiv.className = "sticky-notes-add";
-  newNoteDiv.id = "new-note";
-  const newNoteForm = document.createElement("form");
-  newNoteForm.id = "newNoteForm";
-  const newNoteInputContainer = document.createElement("div");
-  newNoteInputContainer.className = "main-text-area-container";
-  const newNoteTextArea = document.createElement("textarea");
-  newNoteTextArea.id = "post-text";
-  const newNoteButton = document.createElement("button");
-  newNoteButton.id = "post-button";
-  newNoteButton.textContent = "+";
-
-  const form = document.getElementById("newNoteForm");
-  const newSearchInput = document.createElement("input");
+  const newNoteDiv = defineInputNote();
+  const newSearchInput = defineSearchInput();
 
   // Check if there's local storage Data or not before appending to Default Notes
   let defaultNotes = localStorageNotesData
@@ -68,65 +50,71 @@ function initApp() {
         },
       ];
 
-  // Filter Notes for Search Note Feature
-  const filterNotes = defaultNotes.filter(
-    (note) => note.notesMsg == newSearchInput.value,
-  );
+  function defineInputNote() {
+    // Created Input Note for Adding New Notes
+    const newNoteDiv = document.createElement("div");
+    newNoteDiv.className = "sticky-notes-add";
+    newNoteDiv.id = "new-note";
+    const newNoteForm = document.createElement("form");
+    newNoteForm.id = "newNoteForm";
+    const newNoteInputContainer = document.createElement("div");
+    newNoteInputContainer.className = "main-text-area-container";
+    const newNoteTextArea = document.createElement("textarea");
+    newNoteTextArea.id = "post-text";
+    const newNoteButton = document.createElement("button");
+    newNoteButton.id = "post-button";
+    newNoteButton.textContent = "+";
 
-  // Check which notes data is used for source notes
-  let sourcenotes = newSearchInput.value == "" ? defaultNotes : filterNotes;
+    const form = document.getElementById("newNoteForm");
 
-  // Defining App Title to Change App Title Based on Notes Count
-  const appTitle = document.getElementById("app-title");
-  appTitle.innerText =
-    defaultNotes.length > 0
-      ? appTitle.innerText + " " + "with " + defaultNotes.length + " notes.."
-      : appTitle.innerText;
-
-  // Add Input Note Button
-  newNoteButton.addEventListener("click", (e) => {
-    e.preventDefault();
-    addNewStickyNote(e);
-    form.requestSubmit();
-  });
-
-  // Append Input Note Elements
-  newNoteInputContainer.appendChild(newNoteTextArea);
-  newNoteForm.appendChild(newNoteInputContainer);
-  newNoteForm.appendChild(newNoteButton);
-  newNoteDiv.appendChild(newNoteForm);
-  mainBoard.appendChild(newNoteDiv);
-
-  // Defining Search Input Element
-  newSearchInput.style.className = "search-bar";
-  newSearchInput.style.backgroundColor = "pink";
-  newSearchInput.style.width = "100px";
-  newSearchInput.style.height = "100px";
-
-  // Appending to the Main Board
-  mainBoard.appendChild(newSearchInput);
-
-  // New Search Input Events
-  newSearchInput.addEventListener("input", (e) => {
-    e.preventDefault();
-
-    // alert(newSearchInput.value);
-    if (newSearchInput.value == "") {
-      sourcenotes = defaultNotes;
-    } else {
-      const filterNotes = defaultNotes.filter((note) =>
-        new RegExp(newSearchInput.value, "i").test(note.notesMsg),
-      );
-      sourcenotes = filterNotes;
-    }
-
-    console.log(sourcenotes);
-    // alert(sourcenotes);
-    cleanCurrentNotes();
-    sourcenotes.map((el) => {
-      updateDefaultNotes(el);
+    // Add Input Note Button
+    newNoteButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      addNewStickyNote(e);
+      form.requestSubmit();
     });
-  });
+
+    newNoteInputContainer.appendChild(newNoteTextArea);
+    newNoteForm.appendChild(newNoteInputContainer);
+    newNoteForm.appendChild(newNoteButton);
+    newNoteDiv.appendChild(newNoteForm);
+
+    return newNoteDiv;
+  }
+
+  function defineSearchInput() {
+    const newSearchInput = document.createElement("input");
+
+    // Defining Search Input Element
+    newSearchInput.style.className = "search-bar";
+    newSearchInput.style.backgroundColor = "pink";
+    newSearchInput.style.width = "100px";
+    newSearchInput.style.height = "100px";
+
+    // New Search Input Events
+    newSearchInput.addEventListener("input", (e) => {
+      e.preventDefault();
+
+      // alert(newSearchInput.value);
+      if (newSearchInput.value == "") {
+        sourcenotes = defaultNotes;
+      } else {
+        const filterNotes = defaultNotes.filter((note) =>
+          new RegExp(newSearchInput.value, "i").test(note.notesMsg),
+        );
+        sourcenotes = filterNotes;
+      }
+
+      console.log(sourcenotes);
+      // alert(sourcenotes);
+      cleanCurrentNotes();
+      sourcenotes.map((el) => {
+        updateDefaultNotes(el);
+      });
+    });
+
+    return newSearchInput;
+  }
 
   function getDuration(startDateTime) {
     const diffinMs = Math.abs(new Date(startDateTime) - new Date());
@@ -252,7 +240,6 @@ function initApp() {
           changedNote.top = newY;
 
           localStorage.setItem("WEB_DIARY_NOTES", JSON.stringify(defaultNotes));
-
         }
       }
 
@@ -408,9 +395,32 @@ function initApp() {
       .forEach((el) => el.remove());
   }
 
-  defineAddNoteDiv();
+  function startApp() {
+    // Filter Notes for Search Note Feature
+    const filterNotes = defaultNotes.filter(
+      (note) => note.notesMsg == newSearchInput.value,
+    );
 
-  sourcenotes.map((e) => {
-    updateDefaultNotes(e);
-  });
+    // Check which notes data is used for source notes
+    let sourcenotes = newSearchInput.value == "" ? defaultNotes : filterNotes;
+
+    // Defining App Title to Change App Title Based on Notes Count
+    const appTitle = document.getElementById("app-title");
+    appTitle.innerText =
+      defaultNotes.length > 0
+        ? appTitle.innerText + " " + "with " + defaultNotes.length + " notes.."
+        : appTitle.innerText;
+
+    // Appending to the Main Board
+    mainBoard.appendChild(newNoteDiv);
+    mainBoard.appendChild(newSearchInput);
+
+    defineAddNoteDiv();
+
+    sourcenotes.map((e) => {
+      updateDefaultNotes(e);
+    });
+  }
+
+  startApp();
 }
