@@ -50,6 +50,21 @@ function initApp() {
         },
       ];
 
+  // Filter Notes for Search Note Feature
+  const filterNotes = defaultNotes.filter(
+    (note) => note.notesMsg == newSearchInput.value,
+  );
+
+  // Check which notes data is used for source notes
+  let sourcenotes = newSearchInput.value == "" ? defaultNotes : filterNotes;
+
+  // Defining App Title to Change App Title Based on Notes Count
+  const appTitle = document.getElementById("app-title");
+  appTitle.innerText =
+    defaultNotes.length > 0
+      ? appTitle.innerText + " " + "with " + defaultNotes.length + " notes.."
+      : appTitle.innerText;
+
   function defineInputNote() {
     // Created Input Note for Adding New Notes
     const newNoteDiv = document.createElement("div");
@@ -65,13 +80,20 @@ function initApp() {
     newNoteButton.id = "post-button";
     newNoteButton.textContent = "+";
 
-    const form = document.getElementById("newNoteForm");
-
     // Add Input Note Button
     newNoteButton.addEventListener("click", (e) => {
       e.preventDefault();
       addNewStickyNote(e);
-      form.requestSubmit();
+      newNoteForm.requestSubmit();
+    });
+
+    // Input Note from Enter
+    newNoteTextArea.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        addNewStickyNote(e);
+        newNoteForm.requestSubmit();
+      }
     });
 
     newNoteInputContainer.appendChild(newNoteTextArea);
@@ -249,16 +271,6 @@ function initApp() {
       }
     });
 
-    newDiv.addEventListener("mouseenter", (e) => {
-      elements.newTextArea.style.display = "flex";
-      elements.newText.style.display = "none";
-    });
-
-    newDiv.addEventListener("mouseleave", (e) => {
-      elements.newTextArea.style.display = "none";
-      elements.newText.style.display = "flex";
-    });
-
     const delButtonInside = newDiv.querySelector(".deleteNote");
 
     newDiv.addEventListener("mouseenter", (e) => {
@@ -279,7 +291,6 @@ function initApp() {
     });
 
     elements.newTextArea.addEventListener("input", (e) => {
-      let inputValue = e.target.value;
       const changedNote = sourcenotes.find(
         (note) => note.notesID === Number(newDiv.id),
       );
@@ -298,16 +309,14 @@ function initApp() {
     let offsetX = 0;
     let offsetY = 0;
 
-    const textArea = document.getElementById("post-text");
-    const postButton = document.getElementById("post-button");
     const postText = document.getElementById("post-text");
 
-    textArea.addEventListener("mouseenter", (e) => {
+    postText.addEventListener("mouseenter", (e) => {
       //Focus on Text Area for Post on Mouse Hover
-      textArea.focus();
+      postText.focus();
     });
 
-    console.log(textArea);
+    console.log(postText);
 
     //Event Listeners
 
@@ -327,10 +336,6 @@ function initApp() {
         newNoteDiv.style.left = `${newX}px`;
         newNoteDiv.style.top = `${newY}px`;
 
-        const changedNote = defaultNotes.find(
-          (note) => note.notesID === "new-note",
-        );
-
         const newNoteLocation = {
           left: newX,
           top: newY,
@@ -347,14 +352,6 @@ function initApp() {
         document.removeEventListener("pointerup", pointerUp);
       }
     });
-
-    postText.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        addNewStickyNote(e);
-        form.requestSubmit();
-      }
-    });
   }
 
   function updateDefaultNotes(e) {
@@ -368,13 +365,8 @@ function initApp() {
     const newNoteDiv = document.getElementById("new-note");
     const postText = document.getElementById("post-text");
 
-    // alert(postText.value);
-
-    //get Current Date and Time
-    const currentDateandTime = new Date();
-
     const newStickyNote = {
-      notesID: defaultNotes.length,
+      notesID: Date.now(),
       notesMsg: postText.value,
       notesTimeStamp: Date.now(),
       left: newNoteDiv.style.left.split("px")[0],
@@ -390,27 +382,10 @@ function initApp() {
   }
 
   function cleanCurrentNotes(e) {
-    const allNotes = document
-      .querySelectorAll(".sticky-notes")
-      .forEach((el) => el.remove());
+    document.querySelectorAll(".sticky-notes").forEach((el) => el.remove());
   }
 
   function startApp() {
-    // Filter Notes for Search Note Feature
-    const filterNotes = defaultNotes.filter(
-      (note) => note.notesMsg == newSearchInput.value,
-    );
-
-    // Check which notes data is used for source notes
-    let sourcenotes = newSearchInput.value == "" ? defaultNotes : filterNotes;
-
-    // Defining App Title to Change App Title Based on Notes Count
-    const appTitle = document.getElementById("app-title");
-    appTitle.innerText =
-      defaultNotes.length > 0
-        ? appTitle.innerText + " " + "with " + defaultNotes.length + " notes.."
-        : appTitle.innerText;
-
     // Appending to the Main Board
     mainBoard.appendChild(newNoteDiv);
     mainBoard.appendChild(newSearchInput);
