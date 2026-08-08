@@ -16,12 +16,6 @@ function initApp() {
     localStorage.getItem("NEW_NOTES_LOCATION"),
   );
 
-  // Get Main Board
-  const mainBoard = document.getElementById("main-board");
-
-  const newNoteDiv = defineInputNote();
-  const newSearchInput = defineSearchInput();
-
   // Check if there's local storage Data or not before appending to Default Notes
   let defaultNotes = localStorageNotesData
     ? localStorageNotesData
@@ -50,6 +44,13 @@ function initApp() {
         },
       ];
 
+  // Get Main Board
+  const mainBoard = document.getElementById("main-board");
+
+  const newNoteDiv = defineInputNote();
+  const newSearchInput = defineSearchInput();
+  const link = defineDownloadData();
+
   // Filter Notes for Search Note Feature
   const filterNotes = defaultNotes.filter(
     (note) => note.notesMsg == newSearchInput.value,
@@ -64,6 +65,23 @@ function initApp() {
     defaultNotes.length > 0
       ? appTitle.innerText + " " + "with " + defaultNotes.length + " notes.."
       : appTitle.innerText;
+
+  function defineDownloadData() {
+    const blobData = new Blob([JSON.stringify(defaultNotes)], {
+      type: "application/json",
+    });
+
+    const link = document.createElement("a");
+
+    link.href = URL.createObjectURL(blobData);
+    link.download = "note-data.txt";
+    link.text = "Download JSON";
+
+
+
+    URL.revokeObjectURL(link.href);
+    return link;
+  }
 
   function defineInputNote() {
     // Created Input Note for Adding New Notes
@@ -389,6 +407,7 @@ function initApp() {
     // Appending to the Main Board
     mainBoard.appendChild(newNoteDiv);
     mainBoard.appendChild(newSearchInput);
+    mainBoard.appendChild(link);
 
     defineAddNoteDiv();
 
